@@ -44,15 +44,17 @@ export const update = async (req, res, next) => { // PUT TO 1
 	try {
 		const { product_id } = req.params;
 		const { name, description, brand, image_url, price, category } = req.body;
+		
+		
 		const products = await db.query(
 			`UPDATE products
 			 SET name ='${name}',
 			 description = '${description}',
 			 brand = '${brand}',
              image_url = '${image_url}',
-             price = '${price}',
+             price ='${price}',
              category = '${category}',
-			 updated_at = NOW(),
+			 updated_at = NOW()
 			 WHERE id=${product_id} RETURNING *;`
 		);
 		const [found, ...rest] = products.rows;
