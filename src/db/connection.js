@@ -4,33 +4,24 @@
     const { Pool } = pkg;
 */
 
-// IN DEV
+const {NODE_ENV,DATABASE_URL} = process.env;
 
-// import pg from "pg";
-// // pools will use environment variables
-// // for connection information
-// const { Pool } = pg;
+const isDeployed = NODE_ENV === 'production'
+// conditional ssl config
 
-// const db = new Pool();
+const sslConfig  = isDeployed?  {ssl:{rejectUnauthorized:false}} : {} 
 
-// export default db;
+// then spread it into Pool
 
-// IN PROD
-
-import pg from "pg";
-// pools will use environment variables
-// for connection information
-const { Pool } = pg;
-
-console.log(process.env.NODE_ENV);
-const db = new Pool({
-	ssl: {
-		rejectUnauthorized: false,
-	},
-	connectionString:
-		process.env.NODE_ENV !== "development"
-			? process.env.DATABASE_URL
-			: process.env.DATABASE_URL_DEV,
+const pool = new Pool({
+...(sslConfig), //  spreading sslConfig conditionally
+connectionString:DATABASE_URL
 });
 
-export default db;
+// ADD SSL CONFIG CONDITIONALLY   
+
+// When it's deployed you must use SSL , but in localhost you dont use SSL.
+
+// But how do you now if an express app is deployed ? 
+
+// Answer is this  environment variable : heroku sets NODE_ENV = production
