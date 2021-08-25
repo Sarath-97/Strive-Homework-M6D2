@@ -4,6 +4,10 @@ DELETE is reserved keyword in JS */
 
 import db from "../../db/connection.js";
 
+import multer from "multer";
+
+import { cloudinaryStorage } from "../../utils/index.js";
+
 
 export const list = async (req, res, next) => { // GET ALL
 	try {
@@ -44,8 +48,6 @@ export const update = async (req, res, next) => { // PUT TO 1
 	try {
 		const { product_id } = req.params;
 		const { name, description, brand, image_url, price, category } = req.body;
-		
-		
 		const products = await db.query(
 			`UPDATE products
 			 SET name ='${name}',
@@ -77,3 +79,28 @@ export const deleteProduct = async (req, res, next) => { // DELETE
 		res.status(500).send(error);
 	}
 };
+
+export const uploadImg = async (req, res, next) => { // UPDATE IMG
+	try {
+		const { product_id } = req.params;
+		console.log(product_id) // THIS IS CORRECT
+		const { image_url } = req.file.path;
+		const { name, description, brand, price, category } = req.body;
+		const products = await db.query(
+			`UPDATE products
+			SET name ='${name}',
+			description = '${description}',
+			brand = '${brand}',
+			image_url='${image_url}',
+            price ='${price}',
+            category = '${category}',
+			updated_at = NOW() 
+			WHERE product_id=${product_id} RETURNING *;`
+		)
+		const [found, ...rest] = products.rows;
+		res.status(found ? 200 : 400).send(found); // BUT PARSE ERROR MESSAGE = COLUMN PRODUCT_ID DOES NOT EXIST
+	} catch (error) {
+		next(error)
+	}
+
+}

@@ -49,7 +49,7 @@ export const update = async (req, res, next) => { // PUT TO 1
 			 SET comment ='${comment}',
 			 rate = '${rate}',
 			 product_id = '${product_id}',
-			 updated_at = NOW(),
+			 updated_at = NOW()
 			 WHERE id=${review_id} RETURNING *;`
 		);
 		const [found, ...rest] = reviews.rows;
