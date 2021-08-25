@@ -4,6 +4,8 @@
     const { Pool } = pkg;
 */
 
+// IN DEV
+
 // import pg from "pg";
 // // pools will use environment variables
 // // for connection information
@@ -12,6 +14,8 @@
 // const db = new Pool();
 
 // export default db;
+
+// IN PROD
 
 import pg from "pg";
 // pools will use environment variables
